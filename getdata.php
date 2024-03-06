@@ -32,27 +32,40 @@ if ($result->num_rows > 0) {
 </head>
 
 <body>
-    <div class="container mt-5">
-        <h2 class="text-center">Clipboard Data</h2>
+    <div class="container mt-5 bg-success">
+        <div class="raw bg-dark">
+            <h2 class="text-white text-center">Clipboard Data</h2>
+        </div>
         <hr>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Content</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($data as $row) : ?>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
                     <tr>
-                        <td><?php echo $row['Id']; ?></td>
-                        <td><?php echo $row['Name']; ?></td>
-                        <td><?php echo $row['Content']; ?></td>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Show Code</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($data as $row) : ?>
+                        <tr>
+                            <td><?php echo $row['Id']; ?></td>
+                            <td><?php echo $row['Name']; ?></td>
+                            <td><a href="show_code.php?id=<?php echo $row['Id']; ?>" class="btn btn-outline-primary btn-sm">See</a></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="raw pt-2 pb-2">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">About Developer</h5>
+                    <p class="card-text">Developed By Uttam Jethva</p>
+                    <p class="card-text">Uttamjethva77@gmail.com</p>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 
