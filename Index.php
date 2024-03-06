@@ -1,28 +1,40 @@
 <?php
 require_once 'connect.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["send"])) {
         $title = $_POST["title"];
         $code = $_POST["code"];
 
         // Insert data into the clipboard table
-        $sql = "INSERT INTO clipboard (Name, Content) VALUES ('$title', '$code')";
-        if ($conn->query($sql) === TRUE) {
-            // Retrieve the last inserted ID
-            $id = $conn->insert_id;
-            header("Location: {$_SERVER['REQUEST_URI']}?id=$id");
-            exit;
-        }
+        $sql = "INSERT INTO clipboard (Name, Content) VALUES (?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ss", $title, $code);
+        $stmt->execute();
+        $stmt->close();
+
+        // Retrieve the last inserted ID
+        $id = $conn->insert_id;
+        header("Location: {$_SERVER['REQUEST_URI']}?id=$id");
+        exit;
     } elseif (isset($_POST["retrieve"])) {
         $id = $_POST["ID"];
 
         // Retrieve data from the clipboard table
-        $select = "SELECT Content FROM clipboard WHERE Id = '$id'";
-        $result = $conn->query($select);
+        $sql = "SELECT Content FROM clipboard WHERE Id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $retrievedText = $row["Content"];
+        } else {
+            echo "No data found";
         }
+
+        $stmt->close();
     }
 }
 
@@ -115,8 +127,8 @@ if (isset($_GET['id'])) {
                     </form>
                     <div class="raw">
                         <div class="mb-3 pt-3">
-                            <input type="text" class="form-control" name="Retrievedtext" id="retrievedText" value="<?php if (isset($retrievedText)) echo $retrievedText; ?>">
-                        </div>
+                             <textarea style="width: 100%; resize: none;" class="form-control" name="Retrievedtext" id="retrievedText"><?php if (isset($retrievedText)) echo $retrievedText; ?></textarea>
+                         </div>
                     </div>
                 </div>
             </div>
