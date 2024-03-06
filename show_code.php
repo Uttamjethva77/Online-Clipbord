@@ -4,7 +4,6 @@ require_once 'connect.php'; // Include the connection file
 // Get the ID from the query string
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-
     // SQL query to retrieve data based on the ID
     $sql = "SELECT * FROM clipboard WHERE Id = $id";
     $result = $conn->query($sql);
@@ -54,7 +53,7 @@ if (isset($_GET['id'])) {
                     <tr>
                         <td><?php echo $id; ?></td>
                         <td><?php echo $name; ?></td>
-                        <td><?php echo $content; ?></td>
+                        <td><?php echo htmlspecialchars($content) ?></td>
                     </tr>
                 </tbody>
             </table>
